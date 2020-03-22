@@ -1,4 +1,4 @@
-##X community
+## X community
 A community system driven by Spring Boot.
-##Resources
+## Resources
 https://spring.io/guides
