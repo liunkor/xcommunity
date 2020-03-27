@@ -1,10 +1,3 @@
-## X community
-A community system driven by Spring Boot.
-## Resources
-https://spring.io/guides
-
-## Script
-```sql
 create table USER
 (
 	ID INT auto_increment,
@@ -19,5 +12,3 @@ create table USER
 
 create unique index USER_ID_UINDEX
 	on USER (ID);
-
-```

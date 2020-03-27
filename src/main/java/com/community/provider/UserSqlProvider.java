@@ -40,4 +40,13 @@ public class UserSqlProvider {
             }
         }.toString();
     }
+
+    public String deleteUserByToken(@Param("token") String token) {
+        return new SQL() {
+            {
+                DELETE_FROM("user");
+                WHERE("token = #{token}");
+            }
+        }.toString();
+    }
 }

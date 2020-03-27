@@ -22,11 +22,11 @@ public interface UserMapper {
     @Results({
             @Result(property = "accountId", column = "account_id"),
             @Result(property = "gmtCreate", column = "gmt_create"),
-            @Result(property = "gmtModified", column = "gmt_modifed")
+            @Result(property = "gmtModified", column = "gmt_modified")
     })
     @SelectProvider(type = UserSqlProvider.class, method = "getUserByToken")
-    List<User> getUserByAccountId(String accountId);
+    User getUserByToken(String token);
 
-
-
+    @DeleteProvider(type = UserSqlProvider.class, method = "deleteUserByToken")
+    boolean deleteUserByToken(String token);
 }
