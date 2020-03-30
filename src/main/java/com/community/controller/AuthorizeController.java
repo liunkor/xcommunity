@@ -60,8 +60,9 @@ public class AuthorizeController {
             user.setAccountId(String.valueOf(githupUser.getId()));
             user.setGmtCreate(System.currentTimeMillis());
             user.setGmtModified(user.getGmtCreate());
+            user.setAvatarUrl(githupUser.getAvatar_url());
             userMapper.insert(user);
-
+            System.out.println(user);
             response.addCookie(new Cookie("token", token));
             return "redirect:/";
         } else {

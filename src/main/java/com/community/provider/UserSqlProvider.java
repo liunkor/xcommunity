@@ -15,16 +15,16 @@ public class UserSqlProvider {
     /**
      * Method 2: construct sql by using API
      */
-    public String getUserByAccountId(@Param("accountId") String accountId) {
+    public String getUserById(@Param("id") String id) {
         return new SQL() {
             {
                 SELECT("*");
                 FROM("user");
-                if (accountId != null) {
-                    WHERE("account_id = #{accountId}");
-                } /** else {
+                if (id != null) {
+                    WHERE("id = #{id}");
+                }  else {
                     WHERE("1=2");
-                } **/
+                }
             }
         }.toString();
     }
@@ -36,6 +36,8 @@ public class UserSqlProvider {
                 FROM("user");
                 if (token != null) {
                     WHERE("token = #{token}");
+                } else {
+                    WHERE("1=2");
                 }
             }
         }.toString();
@@ -45,7 +47,11 @@ public class UserSqlProvider {
         return new SQL() {
             {
                 DELETE_FROM("user");
-                WHERE("token = #{token}");
+                if (token != null) {
+                    WHERE("token = #{token}");
+                } else {
+                    WHERE("1=2");
+                }
             }
         }.toString();
     }
