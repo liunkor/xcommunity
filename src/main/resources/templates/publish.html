@@ -11,50 +11,7 @@
 
 </head>
 <body class="container .container-lg main" style="background-color: #d2d8de;">
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark" style="margin-bottom: 10px;">
-    <a class="navbar-brand" href="/">xCommunity</a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-    </button>
-
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <form class="form-inline my-2 my-lg-0 mr-auto">
-            <input class="form-control mr-sm-2" type="search" placeholder="Search something" aria-label="Search">
-            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-        </form>
-        <ul class="navbar-nav mr-auto">
-            <li class="nav-item">
-                <a class="nav-link" href="#">Java <span class="sr-only">(current)</span></a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="">Spring Boot</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="">Python</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="">Linux</a>
-            </li>
-        </ul>
-        <ul class="navbar-nav ml-auto" style="margin-right: 5px;">
-            <li class="nav-item" th:if="${session.user == null}">
-                <a class="nav-link" href="https://github.com/login/oauth/authorize?client_id=e4e04b0f040f6502848b&redirect_uri=http://localhost:8080/callback&scope=user&state=1">Login</a>
-            </li>
-            <li class="nav-item dropdown" th:if="${session.user != null}">
-                <a class="nav-link dropdown-toggle" href="#" id=""
-                   role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    <img th:src="${session.user.getAvatarUrl()}" th:alt="${session.user.getName()}">
-                </a>
-                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                    <a class="dropdown-item" href="/publish">New Post</a>
-                    <a class="dropdown-item" href="#">Profile</a>
-                    <div class="dropdown-divider"></div>
-                    <a class="dropdown-item" th:href="@{/logout(token=${session.user.getToken()})}">Exit</a>
-                </div>
-            </li>
-        </ul>
-    </div>
-</nav>
+    <div th:insert="navigation :: nav"></div>
 <div class="container-fluid x-main-content">
     <div class="row" id="main-content-row">
         <div class="col-lg-8 col-md-12 col-sm-12 col-12" ><br>

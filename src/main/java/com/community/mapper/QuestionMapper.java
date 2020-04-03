@@ -5,6 +5,7 @@ import com.community.model.User;
 import com.community.provider.QuestionSqlProvider;
 import com.community.provider.UserSqlProvider;
 import org.apache.ibatis.annotations.*;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.List;
 
@@ -15,22 +16,21 @@ public interface QuestionMapper {
             "values (#{title}, #{description}, #{gmtCreate}, #{gmtModified}, #{creator}, #{tag})")
     void insert(Question question);
 
-    @Results({
-            @Result(property = "gmtCreate", column = "gmt_create"),
-            @Result(property = "gmtModified", column = "gmt_modified"),
-            @Result(property = "viewCount", column = "view_count"),
-            @Result(property = "likeCount", column = "like_count")
-    })
     @SelectProvider(type = QuestionSqlProvider.class, method = "getQuestionById")
     Question getQuestionById(Integer id);
 
-    @Results({
-            @Result(property = "gmtCreate", column = "gmt_create"),
-            @Result(property = "gmtModified", column = "gmt_modified"),
-            @Result(property = "viewCount", column = "view_count"),
-            @Result(property = "likeCount", column = "like_count")
-    })
     @SelectProvider(type = QuestionSqlProvider.class, method = "getQuestions")
-    List<Question> getQuestions();
+    List<Question> getQuestions(Integer offset, Integer size);
+
+    @Select("select count(1) from question")
+    Integer count();
+
+    @Select("select count(1) from question where creator = #{userId}")
+    Integer countByUserId(@Param("userId") Integer userId);
+
+    @Select("select * from question where creator = #{userId} limit #{offset}, #{size}")
+    List<Question> getQuestionsByUserId(@Param("userId") Integer userId,
+                                        @Param("offset") Integer offset,
+                                        @Param("size") Integer size);
 }
 

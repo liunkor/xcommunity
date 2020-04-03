@@ -21,6 +21,6 @@ public class QuestionSqlProvider {
     }
 
     public String getQuestions() {
-        return "select * from question";
+        return "select * from question limit #{offset}, #{size}";
     }
 }

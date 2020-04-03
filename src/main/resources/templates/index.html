@@ -11,50 +11,7 @@
 
 </head>
 <body class="container .container-lg main" style="background-color: #d2d8de;">
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark" style="margin-bottom: 10px;">
-    <a class="navbar-brand" href="/">xCommunity</a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-    </button>
-
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <form class="form-inline my-2 my-lg-0 mr-auto">
-            <input class="form-control mr-sm-2" type="search" placeholder="Search something" aria-label="Search">
-            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-        </form>
-        <ul class="navbar-nav mr-auto">
-            <li class="nav-item">
-                <a class="nav-link" href="#">Java <span class="sr-only">(current)</span></a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="">Spring Boot</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="">Python</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="">Linux</a>
-            </li>
-        </ul>
-        <ul class="navbar-nav ml-auto" style="margin-right: 5px;">
-            <li class="nav-item" th:if="${session.user == null}">
-                <a class="nav-link" href="https://github.com/login/oauth/authorize?client_id=e4e04b0f040f6502848b&redirect_uri=http://localhost:8080/callback&scope=user&state=1">Login</a>
-            </li>
-            <li class="nav-item dropdown" th:if="${session.user != null}">
-                <a class="nav-link dropdown-toggle" href="#" id=""
-                    role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    <img th:src="${session.user.getAvatarUrl()}" th:alt="${session.user.getName()}">
-                </a>
-                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                    <a class="dropdown-item" href="/publish">New Post</a>
-                    <a class="dropdown-item" href="#">Profile</a>
-                    <div class="dropdown-divider"></div>
-                    <a class="dropdown-item" th:href="@{/logout(token=${session.user.getToken()})}">Exit</a>
-                </div>
-            </li>
-        </ul>
-    </div>
-</nav>
+    <div th:insert="navigation :: nav"></div>
 
 <div class="container-fluid x-main-content">
     <div class="row" id="main-content-row">
@@ -66,23 +23,51 @@
                 <span>Topics</span>
             </h2>
             <hr>
-            <div th:if="${questionList != null}">
-                    <div class="media cell" th:each="q: ${questionList}">
+            <div th:if="${pagination != null}">
+                    <div class="media cell" th:each="q: ${pagination.questions}">
                         <img th:src="${q.user.avatarUrl}" class="mr-3 " alt="..." >
                         <span class="media-body">
-                            <span class="item_title" th:text="${q.title}"></span>
+                            <a th:href="@{'/question/' + ${q.getId()}}">
+                                <span class="item_title" th:text="${q.title}"></span>
+                            </a>
                             <div class="sep5"></div>
                             <div class="text-desc">
-                                <span  th:text="${q.viewCount}"></span>次浏览•
-                                <span th:text="${#dates.format(q.gmtCreate, 'dd MMMM yyyy')}"></span>
+                                <span  th:text="${q.viewCount}"></span> 次浏览 •
+                                <span th:text="${q.commentCount}"></span> 个评论 •
+                                <span th:text="${#dates.format(q.gmtCreate, 'yyyy-MM-dd HH:MM')}"></span>
                             </div>
                     </div>
-            </div>
+            </div><br>
+            <nav aria-label="Page navigation example">
+                <ul class="pagination">
+                    <li th:if="${pagination.showFirstPage}" class="page-item"  >
+                        <a class="page-link" href="/?page=1" aria-label="Previous">
+                            <span aria-hidden="true">&lt;&lt;</span>
+                        </a>
+                    </li>
+
+                    <li th:if="${pagination.showPrevious}" class="page-item">
+                        <a class="page-link" th:href="@{/(page=${pagination.page - 1})}">&lt;</a>
+                    </li>
+                    <li th:each="page : ${pagination.pages}" th:class="${pagination.page == page}? 'page-item active' : ''" >
+                        <a class="page-link" th:href="@{/(page=${page})}" th:text="${page}"></a>
+                    </li>
+                    <li th:if="${pagination.showNext}" class="page-item">
+                        <a class="page-link" th:href="@{/(page=${pagination.page + 1})}">&gt;</a>
+                    </li>
+
+                    <li th:if="${pagination.showEndPage}" class="page-item"  >
+                        <a class="page-link" th:href="@{/(page=${pagination.totalPage})}" aria-label="Previous">
+                            <span aria-hidden="true">&gt;&gt;</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
         </div>
 
         <div class="col-lg-4 col-md-12 col-sm-12 col-12" style="">
             <br>
-            <h3>Popular posts</h3>
+            <h5>Popular topics</h5>
             <hr>
             <ul class="list-group list-group-flush">
                 <li class="list-group-item">logstash导入es自动生成的index的date_detection为什么是false</li>

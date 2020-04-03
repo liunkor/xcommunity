@@ -1,0 +1,99 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title th:text="${sectionName}"> - xCommunity</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/bootstrap-theme.min.css">
+    <link rel="stylesheet" href="/css/xcommunity.css">
+    <script type="application/javascript" src="/js/jquery-3.4.1.js"></script>
+    <script type="application/javascript" src="/js/bootstrap.min.js"></script>
+
+</head>
+<body class="container .container-lg main" style="background-color: #d2d8de;">
+<div th:insert="navigation :: nav"></div>
+
+<div class="container-fluid x-main-content">
+    <div class="row" id="main-content-row">
+        <div class="col-lg-8 col-md-12 col-sm-12 col-12" ><br>
+            <h2>
+                <svg class="bi bi-list-ul" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                    <path fill-rule="evenodd" d="M5 11.5a.5.5 0 01.5-.5h9a.5.5 0 010 1h-9a.5.5 0 01-.5-.5zm0-4a.5.5 0 01.5-.5h9a.5.5 0 010 1h-9a.5.5 0 01-.5-.5zm0-4a.5.5 0 01.5-.5h9a.5.5 0 010 1h-9a.5.5 0 01-.5-.5zm-3 1a1 1 0 100-2 1 1 0 000 2zm0 4a1 1 0 100-2 1 1 0 000 2zm0 4a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd"/>
+                </svg>
+                <span th:text="${sectionName}"></span>
+            </h2>
+            <hr>
+            <div th:if="${pagination != null}">
+                <div class="media cell" th:each="q: ${pagination.questions}">
+
+                    <span class="media-body">
+                            <a th:href="@{'/question/' + ${q.id}}">
+                                <span class="item_title" th:text="${q.title}"></span>
+                            </a>
+                            <div class="sep5"></div>
+                            <div class="text-desc">
+                                <span  th:text="${q.viewCount}"></span> 次浏览 •
+                                <span th:text="${q.commentCount}"></span> 个评论 •
+                                <span th:text="${#dates.format(q.gmtCreate, 'yyyy-MM-dd HH:MM')}"></span>
+                            </div>
+                </div>
+            </div><br>
+            <nav aria-label="Page navigation example" th:if="${pagination != null}">
+                <ul class="pagination">
+                    <li th:if="${pagination.showFirstPage}" class="page-item"  >
+                        <a class="page-link" th:href="@{/profile/{section}/(page=1, section=${section})}" aria-label="Previous">
+                            <span aria-hidden="true">&lt;&lt;</span>
+                        </a>
+                    </li>
+
+                    <li th:if="${pagination.showPrevious}" class="page-item">
+                        <a class="page-link" th:href="@{/profile/{section}(page=${pagination.page - 1}, section=${section})}">&lt;</a>
+                    </li>
+                    <li th:each="page : ${pagination.pages}" th:class="${pagination.page == page}? 'page-item active' : ''" >
+                        <a class="page-link" th:href="@{/profile/{section}/(page=${page}, section=${section})}" th:text="${page}"></a>
+                    </li>
+                    <li th:if="${pagination.showNext}" class="page-item">
+                        <a class="page-link" th:href="@{/profile/{section}/(page=${pagination.page + 1}, section=${section})}">&gt;</a>
+                    </li>
+
+                    <li th:if="${pagination.showEndPage}" class="page-item"  >
+                        <a class="page-link" th:href="@{/profile/{section}/(page=${pagination.totalPage}, section=${section})}" aria-label="Previous">
+                            <span aria-hidden="true">&gt;&gt;</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+
+        <div class="col-lg-4 col-md-12 col-sm-12 col-12" style="">
+            <br>
+            <div class="list-group">
+                <ul class="list-group list-group-flush">
+                    <li th:class="${'questions'== section}? 'list-group-item active': 'list-group-item'">
+                        <a href="/profile/questions">
+                            <svg class="bi bi-pencil-square" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M15.502 1.94a.5.5 0 010 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 01.707 0l1.293 1.293zm-1.75 2.456l-2-2L4.939 9.21a.5.5 0 00-.121.196l-.805 2.414a.25.25 0 00.316.316l2.414-.805a.5.5 0 00.196-.12l6.813-6.814z"/>
+                                <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 002.5 15h11a1.5 1.5 0 001.5-1.5v-6a.5.5 0 00-1 0v6a.5.5 0 01-.5.5h-11a.5.5 0 01-.5-.5v-11a.5.5 0 01.5-.5H9a.5.5 0 000-1H2.5A1.5 1.5 0 001 2.5v11z" clip-rule="evenodd"/>
+                            </svg>&nbsp;
+                            My Topics
+                        </a>
+                    </li>
+                    <li th:class="${'replies'== section}? 'list-group-item active': 'list-group-item'">
+                        <a href="/profile/replies">
+                            <svg class="bi bi-chat-dots-fill" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                <path fill-rule="evenodd" d="M16 8c0 3.866-3.582 7-8 7a9.06 9.06 0 01-2.347-.306c-.584.296-1.925.864-4.181 1.234-.2.032-.352-.176-.273-.362.354-.836.674-1.95.77-2.966C.744 11.37 0 9.76 0 8c0-3.866 3.582-7 8-7s8 3.134 8 7zM5 8a1 1 0 11-2 0 1 1 0 012 0zm4 0a1 1 0 11-2 0 1 1 0 012 0zm3 1a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd"/>
+                            </svg>&nbsp;
+                            Replies
+                        </a> &nbsp;&nbsp;<span class="badge badge-primary badge-pill">0</span>
+                    </li>
+                    <li class="list-group-item">Followed Topics</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+<div align="center"><br>
+    <p>Copyright@2020 xCommunity.com</p>
+</div>
+</body>
+</html>

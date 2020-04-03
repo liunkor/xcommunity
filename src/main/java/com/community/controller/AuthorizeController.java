@@ -5,6 +5,7 @@ import com.community.dto.GithupUser;
 import com.community.mapper.UserMapper;
 import com.community.model.User;
 import com.community.provider.GithubProvider;
+import com.community.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -35,6 +36,9 @@ public class AuthorizeController {
     @Autowired
     private UserMapper userMapper;
 
+    @Autowired
+    UserService userService;
+
     // login with github account
     @GetMapping("/callback")
     public String callback(@RequestParam(name="code") String code,
@@ -54,16 +58,19 @@ public class AuthorizeController {
 
         if (githupUser != null ) {
             User user = new User();
+            user.setAccountId(String.valueOf(githupUser.getId()));
             String token = UUID.randomUUID().toString();
             user.setToken(token);
             user.setName(githupUser.getName());
-            user.setAccountId(String.valueOf(githupUser.getId()));
             user.setGmtCreate(System.currentTimeMillis());
             user.setGmtModified(user.getGmtCreate());
-            user.setAvatarUrl(githupUser.getAvatar_url());
-            userMapper.insert(user);
-            System.out.println(user);
-            response.addCookie(new Cookie("token", token));
+            user.setAvatarUrl(githupUser.getAvatarUrl());
+
+            Cookie cookie = new Cookie("token", token);
+            cookie.setMaxAge(3600);
+            response.addCookie(cookie);
+
+            userService.createOrUpdateUser(user);
             return "redirect:/";
         } else {
             return "redirect:/";
