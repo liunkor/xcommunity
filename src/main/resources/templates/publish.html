@@ -3,11 +3,11 @@
 <head>
     <title>X community - To explore the world.</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <link rel="stylesheet" href="css/bootstrap.min.css">
-    <link rel="stylesheet" href="css/bootstrap-theme.min.css">
-    <link rel="stylesheet" href="css/xcommunity.css">
-    <script type="application/javascript" src="js/jquery-3.4.1.js"></script>
-    <script type="application/javascript" src="js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/bootstrap-theme.min.css">
+    <link rel="stylesheet" href="/css/xcommunity.css">
+    <script type="application/javascript" src="/js/jquery-3.4.1.js"></script>
+    <script type="application/javascript" src="/js/bootstrap.min.js"></script>
 
 </head>
 <body class="container .container-lg main" style="background-color: #d2d8de;">
@@ -25,6 +25,7 @@
             </h2>
             <hr>
             <form action="/publish" method="post">
+                <input type="hidden" name="id" th:value="${id}">
                 <div class="form-group">
                     <label for="title">Title</label>
                     <input type="text" class="form-control" id="title" name="title" placeholder="Thread title..." th:value="${title}">

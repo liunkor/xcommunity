@@ -62,8 +62,6 @@ public class AuthorizeController {
             String token = UUID.randomUUID().toString();
             user.setToken(token);
             user.setName(githupUser.getName());
-            user.setGmtCreate(System.currentTimeMillis());
-            user.setGmtModified(user.getGmtCreate());
             user.setAvatarUrl(githupUser.getAvatarUrl());
 
             Cookie cookie = new Cookie("token", token);
