@@ -1,0 +1,26 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>X community - To explore the world.</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/bootstrap-theme.min.css">
+    <link rel="stylesheet" href="/css/xcommunity.css">
+    <script type="application/javascript" src="/js/jquery-3.4.1.js"></script>
+    <script type="application/javascript" src="/js/bootstrap.min.js"></script>
+
+</head>
+<body class="container .container-lg main" style="background-color: #d2d8de;">
+<div th:insert="navigation :: nav"></div>
+
+
+    <div class="jumbotron">
+        <h1 class="display-4">Oh! With some errors out here!</h1>
+        <p class="lead" th:text="${message}"></p>
+        <hr class="my-4">
+        <a class="btn btn-primary btn-lg" href="/" role="button">Return back to Home page</a>
+    </div>
+
+
+</body>
+</html>
