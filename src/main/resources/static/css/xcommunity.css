@@ -57,3 +57,55 @@
 .list-group-item+.list-group-item.active {
     border-top-width: 0;
 }
+
+.comment {
+    border-bottom: 1px solid #0000001a;
+    margin-bottom: 10px;
+    padding-bottom: 5px;
+}
+.comment-content {
+    margin: 10px 0;
+}
+
+.btn-success {
+    float: right;
+}
+
+.media-left {
+    margin-top: 6px;
+}
+.comment-section {
+    margin-top: 30px;
+}
+
+.menu {
+    color: #999;
+    margin-top: 2px;
+}
+
+.menu .icon {
+    margin-right: 6px;
+    font-size: 15px;
+    cursor: pointer;
+}
+
+.menu .icon:hover {
+    color: #2b669a;
+}
+
+.no {
+    font-size: 9px;
+    line-height: 9px;
+    font-weight: 500;
+    border-radius: 10px;
+    display: inline-block;
+    background-color: #f0f0f0;
+    color: #ccc;
+    padding: 2px 5px;
+    cursor: pointer;
+    float:right;
+}
+
+.reply-text {
+    margin-top: 20px;
+}

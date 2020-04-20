@@ -8,8 +8,19 @@
     <link rel="stylesheet" href="css/xcommunity.css">
     <script type="application/javascript" src="js/jquery-3.4.1.js"></script>
     <script type="application/javascript" src="js/bootstrap.min.js"></script>
-
 </head>
+<script type="application/javascript">
+    window.onload = function () {
+        var closeable = window.localStorage.getItem("closable");
+        var questionId = window.localStorage.getItem("questionId");
+        if (closeable == "true") {
+            window.localStorage.removeItem("closable");
+            window.localStorage.removeItem("questionId");
+            window.close();
+            window.open("http://localhost:8080/question/"+questionId);
+        }
+    }
+</script>
 <body class="container .container-lg main" style="background-color: #d2d8de;">
     <div th:insert="navigation :: nav"></div>
 

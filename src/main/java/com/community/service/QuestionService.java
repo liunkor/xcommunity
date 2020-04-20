@@ -1,16 +1,16 @@
 package com.community.service;
 
+import com.community.dto.CommentDTO;
 import com.community.dto.PaginationDTO;
 import com.community.dto.QuestionDTO;
+import com.community.enums.CommentTypeEnum;
 import com.community.exception.CustomizedErrorCode;
 import com.community.exception.CustomizedException;
+import com.community.mapper.CommentMapper;
 import com.community.mapper.QuestionExtMapper;
 import com.community.mapper.QuestionMapper;
 import com.community.mapper.UserMapper;
-import com.community.model.Question;
-import com.community.model.QuestionExample;
-import com.community.model.User;
-import com.community.model.UserExample;
+import com.community.model.*;
 import org.apache.ibatis.session.RowBounds;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +18,9 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class QuestionService {
@@ -31,6 +34,9 @@ public class QuestionService {
     @Autowired
     private QuestionExtMapper questionExtMapper;
 
+    @Autowired
+    private CommentMapper commentMapper;
+
     public PaginationDTO list(Integer page, Integer size) {
         /**
          * page: the number of the current page;
@@ -43,8 +49,10 @@ public class QuestionService {
 
         //size * (page - 1)
         Integer offset = size * (paginationDTO.getPage() - 1);
+        QuestionExample questionExample = new QuestionExample();
+        questionExample.setOrderByClause("gmt_modified desc"); // order by gmtModified desc
         List<Question> questions = questionMapper.selectByExampleWithRowbounds(
-                new QuestionExample(),
+                questionExample,
                 new RowBounds(offset, size));
         if (questions != null) {
             List<QuestionDTO> questionDTOList = new ArrayList<>();
@@ -61,7 +69,7 @@ public class QuestionService {
         return paginationDTO;
     }
 
-    public PaginationDTO listByUserId(Integer userId, Integer page, Integer size) {
+    public PaginationDTO listByUserId(Long userId, Integer page, Integer size) {
         /**
          * page: the number of the current page;
          * size: the number of questions in one page;
@@ -96,7 +104,7 @@ public class QuestionService {
         return paginationDTO;
     }
 
-    public QuestionDTO getQuestionById(Integer id) {
+    public QuestionDTO getQuestionById(Long id) {
 
         Question question = questionMapper.selectByPrimaryKey(id);
         if (question == null) {
@@ -114,6 +122,9 @@ public class QuestionService {
         if (question.getId() == null) {
             question.setGmtCreate(System.currentTimeMillis());
             question.setGmtModified(question.getGmtCreate());
+            question.setViewCount((long) 0);
+            question.setCommentCount((long) 0);
+            question.setLikeCount((long) 0);
             questionMapper.insert(question);
         } else {
             Question updateQuestion = new Question();
@@ -131,11 +142,46 @@ public class QuestionService {
         }
     }
 
-    public void incView(Integer id) {
+    public void incView(Long id) {
         Question question = new Question();
         question.setId(id);
-        question.setViewCount(1);
+        question.setViewCount((long) 1);
         questionExtMapper.incView(question);
 
+    }
+
+    public List<CommentDTO> listByQuestionId(Long id) {
+        CommentExample commentExample = new CommentExample();
+        commentExample.setOrderByClause("gmt_modified desc");
+        commentExample.createCriteria()
+                .andParentIdEqualTo(id)
+                .andTypeEqualTo(CommentTypeEnum.QUESTION.getType());
+        List<Comment> comments = commentMapper.selectByExample(commentExample);
+
+        if (comments.size() == 0) {
+            return new ArrayList<>();
+        }
+
+        // get the deduplicated commentors
+        Set<Long> commentors = comments.stream().map(comment -> comment.getCommentor()).collect(Collectors.toSet());
+        List<Long> userIds = new ArrayList();
+        userIds.addAll(commentors);
+
+        //get the commentors and convert to map
+        UserExample userExample = new UserExample();
+        userExample.createCriteria()
+                .andIdIn(userIds);
+        List<User> users = userMapper.selectByExample(userExample);
+        Map<Long, User> userMap = users.stream().collect(Collectors.toMap(user -> user.getId(), user -> user));
+
+        //Package each comment and it's commentor to a CommentDTO object.
+        List<CommentDTO> commentDTOS = comments.stream().map(comment -> {
+            CommentDTO commentDTO = new CommentDTO();
+            BeanUtils.copyProperties(comment, commentDTO);
+            commentDTO.setUser(userMap.get(comment.getCommentor()));
+            return commentDTO;
+        }).collect(Collectors.toList());
+
+        return commentDTOS;
     }
 }
