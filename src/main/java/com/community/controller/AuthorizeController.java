@@ -65,7 +65,7 @@ public class AuthorizeController {
             user.setAvatarUrl(githupUser.getAvatarUrl());
 
             Cookie cookie = new Cookie("token", token);
-            cookie.setMaxAge(3600);
+            cookie.setMaxAge(60 * 60 * 24 * 30);
             response.addCookie(cookie);
 
             userService.createOrUpdateUser(user);

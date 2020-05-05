@@ -19,7 +19,9 @@ public class CommentDTO {
 
     private Long likeCount;
 
-    private String cotent;
+    private Long commentCount;
+
+    private String content;
 
     private User user;
 }

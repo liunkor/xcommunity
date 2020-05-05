@@ -3,6 +3,7 @@ create table comment
 	id bigint auto_increment,
 	parent_id bigint not null,
 	type int,
+	content varchar(1024) not null,
 	commentor int not null,
 	gmt_create BIGINT not null,
 	gmt_modified BIGINT not null,

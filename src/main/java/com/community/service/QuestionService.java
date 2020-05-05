@@ -34,9 +34,6 @@ public class QuestionService {
     @Autowired
     private QuestionExtMapper questionExtMapper;
 
-    @Autowired
-    private CommentMapper commentMapper;
-
     public PaginationDTO list(Integer page, Integer size) {
         /**
          * page: the number of the current page;
@@ -78,13 +75,14 @@ public class QuestionService {
         PaginationDTO paginationDTO = new PaginationDTO();
         QuestionExample questionExample = new QuestionExample();
         questionExample.createCriteria()
-                .andIdEqualTo(userId);
+                .andCreatorEqualTo(userId);
         Integer totalCount = (int)questionMapper.countByExample(questionExample);
         paginationDTO.setPagination(totalCount, page, size);
 
         //size * (page - 1)
         Integer offset = size * (paginationDTO.getPage() - 1);
         QuestionExample questionExample2 = new QuestionExample();
+        questionExample2.setOrderByClause("gmt_modified desc");
         questionExample2.createCriteria()
                 .andCreatorEqualTo(userId);
         List<Question> questions = questionMapper.selectByExampleWithRowbounds(
@@ -148,40 +146,5 @@ public class QuestionService {
         question.setViewCount((long) 1);
         questionExtMapper.incView(question);
 
-    }
-
-    public List<CommentDTO> listByQuestionId(Long id) {
-        CommentExample commentExample = new CommentExample();
-        commentExample.setOrderByClause("gmt_modified desc");
-        commentExample.createCriteria()
-                .andParentIdEqualTo(id)
-                .andTypeEqualTo(CommentTypeEnum.QUESTION.getType());
-        List<Comment> comments = commentMapper.selectByExample(commentExample);
-
-        if (comments.size() == 0) {
-            return new ArrayList<>();
-        }
-
-        // get the deduplicated commentors
-        Set<Long> commentors = comments.stream().map(comment -> comment.getCommentor()).collect(Collectors.toSet());
-        List<Long> userIds = new ArrayList();
-        userIds.addAll(commentors);
-
-        //get the commentors and convert to map
-        UserExample userExample = new UserExample();
-        userExample.createCriteria()
-                .andIdIn(userIds);
-        List<User> users = userMapper.selectByExample(userExample);
-        Map<Long, User> userMap = users.stream().collect(Collectors.toMap(user -> user.getId(), user -> user));
-
-        //Package each comment and it's commentor to a CommentDTO object.
-        List<CommentDTO> commentDTOS = comments.stream().map(comment -> {
-            CommentDTO commentDTO = new CommentDTO();
-            BeanUtils.copyProperties(comment, commentDTO);
-            commentDTO.setUser(userMap.get(comment.getCommentor()));
-            return commentDTO;
-        }).collect(Collectors.toList());
-
-        return commentDTOS;
     }
 }

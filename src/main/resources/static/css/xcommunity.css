@@ -1,3 +1,7 @@
+.container {
+    background-color: #d2d8de;
+}
+
 .x-main-content {
     background-color: #fff;
 }
@@ -108,4 +112,13 @@
 
 .reply-text {
     margin-top: 20px;
+}
+
+.tag-list {
+    margin-top: -14px;
+    margin-bottom: 15px;
+}
+
+.question-info {
+    margin-bottom: -12px;
 }

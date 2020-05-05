@@ -16,12 +16,12 @@ import javax.servlet.http.HttpServletRequest;
 public class ProfileController {
 
     @Autowired
-    QuestionService questionService;
+    private QuestionService questionService;
 
     @GetMapping("/profile/{action}")
     public String porfile(@PathVariable(name="action") String action,
                           @RequestParam(name = "page", defaultValue = "1") Integer page,
-                          @RequestParam(name = "size", defaultValue = "8") Integer size,
+                          @RequestParam(name = "size", defaultValue = "10") Integer size,
                           HttpServletRequest request,
                           Model model) {
 
