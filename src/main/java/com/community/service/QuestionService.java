@@ -11,15 +11,13 @@ import com.community.mapper.QuestionExtMapper;
 import com.community.mapper.QuestionMapper;
 import com.community.mapper.UserMapper;
 import com.community.model.*;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.session.RowBounds;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -147,4 +145,30 @@ public class QuestionService {
         questionExtMapper.incView(question);
 
     }
+
+    /**
+     * select reated quesiton of the given question
+     * @param queryDTO
+     * @return
+     */
+    public List<QuestionDTO> selectRelated(QuestionDTO queryDTO) {
+        if (StringUtils.isBlank(queryDTO.getTag())) {
+            return new ArrayList<>();
+        }
+        String[] tags = StringUtils.split(queryDTO.getTag(), ",");
+        String regexpTag = Arrays.stream(tags).collect(Collectors.joining("|"));;
+        Question question = new Question();
+        question.setId(queryDTO.getId());
+        question.setTag(regexpTag);
+
+        List<Question> questions = questionExtMapper.selectRelated(question);
+        //using stream and lambda to cast questions list into questionDTO list
+        List<QuestionDTO> questionDTOS = questions.stream().map(p -> {
+          QuestionDTO questionDTO = new QuestionDTO();
+          BeanUtils.copyProperties(p, questionDTO);
+          return questionDTO;
+        }).collect(Collectors.toList());
+        return questionDTOS;
+    }
+
 }

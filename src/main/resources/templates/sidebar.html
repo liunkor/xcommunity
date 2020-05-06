@@ -37,27 +37,27 @@
                     <li class="list-group-item">Followed Topics</li>
                 </ul>
             </div>
-            <div><br>
-                <h6>Popular topics</h6>
+            <div th:if="${relatedQuestions.size() != 0}"><br>
+                <h6>Related topics</h6>
                 <hr>
-                <ul class="list-group list-group-flush">
-                    <li class="list-group-item">logstash导入es自动date_detection为什么是false</li>
-                    <li class="list-group-item">es7.3 新增字段后，如何快速给新字段赋值</li>
-                    <li class="list-group-item">index的date_detection为什么是false</li>
+                <ul class="related-question">
+                    <li th:each="relatedQuestion : ${relatedQuestions}" class="">
+                        <a th:href="@{'/question/' + ${relatedQuestion.id}}" th:text="${relatedQuestion.title}"></a>
+                    </li>
                 </ul>
             </div>
         </div>
     </div>
 
     <div th:fragment="noLogined">
-        <div >
+        <div th:if="${relatedQuestions.size() != 0}">
             <br>
-            <h5>Popular topics</h5>
+            <h6>Related topics</h6>
             <hr>
-            <ul class="list-group list-group-flush">
-                <li class="list-group-item">logstash导入es自动生成的index的date_detection为什么是false</li>
-                <li class="list-group-item">es7.3 新增字段后，如何快速给新字段赋值</li>
-                <li class="list-group-item">logstash导入es自动生成的index的date_detection为什么是false</li>
+            <ul class="related-question">
+                <li th:each="relatedQuestion : ${relatedQuestions}" class="">
+                    <a th:href="@{'/question/' + ${relatedQuestion.id}}" th:text="${relatedQuestion.title}"></a>
+                </li>
             </ul>
         </div>
     </div>

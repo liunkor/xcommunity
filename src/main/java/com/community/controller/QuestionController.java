@@ -32,8 +32,10 @@ public class QuestionController {
         // add view count
         questionService.incView(id);
         QuestionDTO questionDTO = questionService.getQuestionById(id);
+        List<QuestionDTO> relatedQuestions = questionService.selectRelated(questionDTO);
         model.addAttribute("questionDTO", questionDTO);
         model.addAttribute("comments", comments);
+        model.addAttribute("relatedQuestions", relatedQuestions);
         return "question";
     }
 }

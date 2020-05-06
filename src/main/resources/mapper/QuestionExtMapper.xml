@@ -31,4 +31,10 @@
     COMMENT_COUNT = COMMENT_COUNT + #{commentCount, jdbcType=BIGINT}
     WHERE id = #{id}
   </update>
+
+  <select id="selectRelated" parameterType="com.community.model.Question" resultMap="BaseResultMap">
+    select * from QUESTION
+    where id != #{id} and tag regexp #{tag}
+    limit 10
+  </select>
 </mapper>
