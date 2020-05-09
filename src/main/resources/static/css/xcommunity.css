@@ -132,3 +132,8 @@
     font-size: 14px;
     padding-bottom: 5px;
 }
+
+.publish-tag-lab {
+    display: none;
+    margin-top: 10px;
+}

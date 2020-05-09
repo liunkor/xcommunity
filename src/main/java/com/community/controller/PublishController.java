@@ -1,10 +1,12 @@
 package com.community.controller;
 
+import com.community.cache.TagCache;
 import com.community.dto.QuestionDTO;
 import com.community.mapper.UserMapper;
 import com.community.model.Question;
 import com.community.model.User;
 import com.community.service.QuestionService;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -22,7 +24,9 @@ public class PublishController {
     QuestionService questionService;
 
     @GetMapping("/publish")
-    public String toPublish(HttpServletRequest request) {
+    public String toPublish(HttpServletRequest request,
+                            Model model) {
+        model.addAttribute("tags", TagCache.get());
         if (request.getSession().getAttribute("user") == null) {
             return "redirect:/";
         }
@@ -40,6 +44,7 @@ public class PublishController {
         model.addAttribute("title", title);
         model.addAttribute("description", description);
         model.addAttribute("tag", tag);
+        model.addAttribute("tags", TagCache.get());
 
         if (title == null || title == "") {
             model.addAttribute("error", "The title cann't be blank");
@@ -53,6 +58,13 @@ public class PublishController {
             model.addAttribute("error", "The tag cann't be blank");
             return "publish";
         }
+
+        String invalid = TagCache.isValid(tag);
+        if (StringUtils.isNotBlank(invalid)) {
+            model.addAttribute("error", "Invalid tag: " + invalid);
+            return "publish";
+        }
+
         //verify if the user logined
         User user = (User)request.getSession().getAttribute("user");
         if (user == null) {
@@ -82,6 +94,7 @@ public class PublishController {
         model.addAttribute("description", question.getDescription());
         model.addAttribute("tag", question.getTag());
         model.addAttribute("id", id);
+        model.addAttribute("tags", TagCache.get());
 
         return "publish";
     }

@@ -2,44 +2,82 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>X community - To explore the world.</title>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <link rel="stylesheet" href="/css/bootstrap.min.css">
     <link rel="stylesheet" href="/css/bootstrap-theme.min.css">
     <link rel="stylesheet" href="/css/xcommunity.css">
     <script type="application/javascript" src="/js/jquery-3.4.1.js"></script>
     <script type="application/javascript" src="/js/bootstrap.min.js"></script>
+    <script type="application/javascript" src="/js/xcommunity.js"></script>
 
 </head>
 <body class="container .container-lg main" style="background-color: #d2d8de;">
-    <div th:insert="navigation :: nav"></div>
+<div th:insert="navigation :: nav"></div>
 <div class="container-fluid x-main-content">
     <div class="row" id="main-content-row">
-        <div class="col-lg-8 col-md-12 col-sm-12 col-12" ><br>
+        <div class="col-lg-8 col-md-12 col-sm-12 col-12"><br>
             <h2>
-            <svg class="bi bi-file-earmark-plus" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                <path d="M9 1H4a2 2 0 00-2 2v10a2 2 0 002 2h5v-1H4a1 1 0 01-1-1V3a1 1 0 011-1h5v2.5A1.5 1.5 0 0010.5 6H13v2h1V6L9 1z"/>
-                <path fill-rule="evenodd" d="M13.5 10a.5.5 0 01.5.5v2a.5.5 0 01-.5.5h-2a.5.5 0 010-1H13v-1.5a.5.5 0 01.5-.5z" clip-rule="evenodd"/>
-                <path fill-rule="evenodd" d="M13 12.5a.5.5 0 01.5-.5h2a.5.5 0 010 1H14v1.5a.5.5 0 01-1 0v-2z" clip-rule="evenodd"/>
-            </svg>
-            <span>Create a post</span>
+                <svg class="bi bi-file-earmark-plus" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor"
+                     xmlns="http://www.w3.org/2000/svg">
+                    <path d="M9 1H4a2 2 0 00-2 2v10a2 2 0 002 2h5v-1H4a1 1 0 01-1-1V3a1 1 0 011-1h5v2.5A1.5 1.5 0 0010.5 6H13v2h1V6L9 1z"/>
+                    <path fill-rule="evenodd"
+                          d="M13.5 10a.5.5 0 01.5.5v2a.5.5 0 01-.5.5h-2a.5.5 0 010-1H13v-1.5a.5.5 0 01.5-.5z"
+                          clip-rule="evenodd"/>
+                    <path fill-rule="evenodd" d="M13 12.5a.5.5 0 01.5-.5h2a.5.5 0 010 1H14v1.5a.5.5 0 01-1 0v-2z"
+                          clip-rule="evenodd"/>
+                </svg>
+                <span>Create a post</span>
             </h2>
             <hr>
             <form action="/publish" method="post">
                 <input type="hidden" name="id" th:value="${id}">
                 <div class="form-group">
                     <label for="title">Title</label>
-                    <input type="text" class="form-control" id="title" name="title" placeholder="Thread title..." th:value="${title}">
+                    <input type="text" class="form-control" id="title" name="title" placeholder="Thread title..."
+                           th:value="${title}" autocomplete="off">
                 </div>
                 <div class="form-group">
                     <label for="title">Post description</label>
-                    <textarea class="form-control" id="description" name="description" rows="10" cols="30" th:text="${description}"></textarea>
+                    <textarea class="form-control" id="description" name="description" rows="10" cols="30"
+                              th:text="${description}"></textarea>
                 </div>
                 <div class="form-group">
                     <label for="title">Tags</label>
-                    <input type="text" class="form-control" id="tag" name="tag" placeholder="Input tag with ',' sperator" th:value="${tag}">
+                    <input type="text" class="form-control" id="tag" name="tag" onclick="showSelectTag()"
+                           placeholder="Input tag with ',' sperator" th:value="${tag}" autocomplete="off">
+
+                    <!-- tag list tab start -->
+                    <div id="select-tag" class="publish-tag-lab">
+                        <ul class="nav nav-tabs" id="myTab" role="tablist">
+                            <li class="nav-item" th:each="tagCategory,tagCategoryStat: ${tags}">
+                                <a th:class="${tagCategoryStat.first ? 'nav-link active': 'nav-link'}" data-toggle="tab"
+                                   th:href="'#'+${tagCategory.categoryName}" role="tab"
+                                   aria-selected="true" th:text="${tagCategory.categoryName}">
+                                </a>
+                            </li>
+                        </ul>
+                        <div class="tab-content" id="myTabContent">
+                            <div th:each="tagCategory,tagCategoryStat: ${tags}"
+                                 th:class="${tagCategoryStat.first ? 'tab-pane active': 'tab-pane'}"
+                                 th:id="${tagCategory.categoryName}">
+                                <div class="badge badge-secondary" th:each="subTag: ${tagCategory.tags}">
+                                    <svg class="bi bi-tag-fill" width="1em" height="1em" viewBox="0 0 16 16"
+                                         fill="currentColor"
+                                         xmlns="http://www.w3.org/2000/svg">
+                                        <path fill-rule="evenodd"
+                                              d="M2 1a1 1 0 00-1 1v4.586a1 1 0 00.293.707l7 7a1 1 0 001.414 0l4.586-4.586a1 1 0 000-1.414l-7-7A1 1 0 006.586 1H2zm4 3.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0z"
+                                              clip-rule="evenodd"/>
+                                    </svg>
+                                    <span th:text="${subTag}"
+                                          onclick="selectTag(this)" th:data-tag="${subTag}"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- tag list tab end -->
                 </div>
                 <span class="ui-state-error-text" th:text="${error}" style="color: red"></span><br><br>
-                <button type="submit" class="btn btn-success" > &nbsp;Submit&nbsp; </button>
+                <button type="submit" class="btn btn-success"> &nbsp;Submit&nbsp;</button>
             </form>
         </div>
 

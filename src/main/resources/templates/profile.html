@@ -35,6 +35,7 @@
                                 <span  th:text="${q.viewCount}"></span> 次浏览 •
                                 <span th:text="${q.commentCount}"></span> 个评论 •
                                 <span th:text="${#dates.format(q.gmtCreate, 'yyyy-MM-dd HH:MM')}"></span>
+                                <span> • <a th:href="@{'/publish/' + ${q.id}}">Edit</a></span>
                             </div>
                 </div>
             </div><br>
