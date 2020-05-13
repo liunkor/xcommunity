@@ -31,7 +31,7 @@
                             </svg>
                             Messages
                         </a> &nbsp;&nbsp;
-                        <span th:text="${session.unreadCount}" class="badge badge-pill badge-info"></span>
+                        <span th:if="${session.unreadCount != 0}" th:text="${session.unreadCount}" class="badge badge-pill badge-info"></span>
                     </li>
                     <li class="list-group-item">Followed Questions</li>
                 </ul>

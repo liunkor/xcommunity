@@ -88,6 +88,39 @@
                                 <span th:text="${#dates.format(message.gmtCreate, 'yyyy-MM-dd HH:MM')}"></span>
                             </div>
                 </div>
+                <br>
+                <nav aria-label="Page navigation example" th:if="${pagination != null}">
+                    <ul class="pagination">
+                        <li th:if="${pagination.showFirstPage}" class="page-item">
+                            <a class="page-link" th:href="@{/profile/{section}/(page=1, section=${section})}"
+                               aria-label="Previous">
+                                <span aria-hidden="true">&lt;&lt;</span>
+                            </a>
+                        </li>
+
+                        <li th:if="${pagination.showPrevious}" class="page-item">
+                            <a class="page-link"
+                               th:href="@{/profile/{section}(page=${pagination.page - 1}, section=${section})}">&lt;</a>
+                        </li>
+                        <li th:each="page : ${pagination.pages}"
+                            th:class="${pagination.page == page}? 'page-item active' : ''">
+                            <a class="page-link" th:href="@{/profile/{section}/(page=${page}, section=${section})}"
+                               th:text="${page}"></a>
+                        </li>
+                        <li th:if="${pagination.showNext}" class="page-item">
+                            <a class="page-link"
+                               th:href="@{/profile/{section}/(page=${pagination.page + 1}, section=${section})}">&gt;</a>
+                        </li>
+
+                        <li th:if="${pagination.showEndPage}" class="page-item">
+                            <a class="page-link"
+                               th:href="@{/profile/{section}/(page=${pagination.totalPage}, section=${section})}"
+                               aria-label="Previous">
+                                <span aria-hidden="true">&gt;&gt;</span>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
             </div>
         </div>
 
@@ -118,7 +151,7 @@
                             </svg>
                             Message
                         </a>&nbsp;&nbsp;
-                        <span th:text="${session.unreadCount}" class="badge badge-pill badge-info"></span>
+                        <span th:if="${session.unreadCount != 0}" th:text="${session.unreadCount}" class="badge badge-pill badge-info"></span>
                     </li>
                     <li class="list-group-item">Followed Topics</li>
                 </ul>

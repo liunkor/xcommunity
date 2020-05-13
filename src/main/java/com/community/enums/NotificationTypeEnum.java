@@ -1,8 +1,8 @@
 package com.community.enums;
 
 public enum NotificationTypeEnum {
-    REPLY_QUESTION(1, "Replied the Question: "),
-    REPLY_COMMENT(2, "Replied the Comment: ");
+    REPLY_QUESTION(1, "Replied the Question "),
+    REPLY_COMMENT(2, "Replied the Comment ");
 
     private int type;
     private String name;

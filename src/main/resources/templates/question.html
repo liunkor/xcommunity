@@ -6,20 +6,29 @@
     <link rel="stylesheet" href="/css/bootstrap.min.css">
     <link rel="stylesheet" href="/css/bootstrap-theme.min.css">
     <link rel="stylesheet" href="/css/xcommunity.css">
+    <link rel="stylesheet" href="/css/editormd.preview.css"/>
     <script type="application/javascript" src="/js/jquery-3.4.1.js"></script>
     <script type="application/javascript" src="/js/bootstrap.min.js"></script>
     <script type="application/javascript" src="/js/xcommunity.js"></script>
     <script type="application/javascript" src="/js/moment.js"></script>
-</head>
-<script type="application/javascript">
-    window.onload = function () {
-        var commentContent = window.localStorage.getItem("commentContent");
-        window.localStorage.removeItem("commentContent");
-        if (commentContent != null) {
-            $("#comment_content").val(commentContent);
+    <script type="application/javascript" src="/js/editormd.min.js"></script>
+    <script type="application/javascript" src="/js/lib/marked.min.js"></script>
+    <script type="application/javascript" src="/js/lib/prettify.min.js"></script>
+    <script type="application/javascript">
+        window.onload = function () {
+            var commentContent = window.localStorage.getItem("commentContent");
+            window.localStorage.removeItem("commentContent");
+            if (commentContent != null) {
+                $("#comment_content").val(commentContent);
+            }
         }
-    }
-</script>
+    </script>
+    <script type="text/javascript">
+        $(function() {
+            editormd.markdownToHTML("question-markdown-view", {});
+        });
+    </script>
+</head>
 <body class="container .container-lg main">
 
 <!--   navigation start  -->
@@ -61,8 +70,8 @@
                         </div>
                     </span>
             </div>
-            <div>
-                <span th:text="${questionDTO.getDescription()}"></span>
+            <div id="question-markdown-view">
+                <textarea th:text="${questionDTO.getDescription()}" style="display:none;"></textarea>
             </div>
 
             <!-------   comment section  start  -------->

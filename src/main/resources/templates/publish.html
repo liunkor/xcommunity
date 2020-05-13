@@ -6,10 +6,23 @@
     <link rel="stylesheet" href="/css/bootstrap.min.css">
     <link rel="stylesheet" href="/css/bootstrap-theme.min.css">
     <link rel="stylesheet" href="/css/xcommunity.css">
+    <link rel="stylesheet" href="/css/editormd.min.css"/>
     <script type="application/javascript" src="/js/jquery-3.4.1.js"></script>
     <script type="application/javascript" src="/js/bootstrap.min.js"></script>
     <script type="application/javascript" src="/js/xcommunity.js"></script>
-
+    <script type="application/javascript" src="/js/editormd.min.js"></script>
+    <script type="text/javascript">
+        $(function () {
+            var editor = editormd("question-editor", {
+                width: "100%",
+                height: 350,
+                path: "/js/lib/",  // Autoload modules mode, codemirror, marked... dependents libs path
+                delay: 0,
+                placeholder: "Input the description of question...",
+                watch: false
+            });
+        });
+    </script>
 </head>
 <body class="container .container-lg main" style="background-color: #d2d8de;">
 <div th:insert="navigation :: nav"></div>
@@ -36,10 +49,10 @@
                     <input type="text" class="form-control" id="title" name="title" placeholder="Thread title..."
                            th:value="${title}" autocomplete="off">
                 </div>
-                <div class="form-group">
+                <div class="form-group" id="question-editor">
                     <label for="title">Post description</label>
-                    <textarea class="form-control" id="description" name="description" rows="10" cols="30"
-                              th:text="${description}"></textarea>
+                    <textarea id="description" name="description" rows="10" cols="30"
+                              th:text="${description}" style="display:none;"></textarea>
                 </div>
                 <div class="form-group">
                     <label for="title">Tags</label>
