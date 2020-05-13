@@ -1,12 +1,9 @@
 package com.community.service;
 
-import com.community.dto.CommentDTO;
 import com.community.dto.PaginationDTO;
 import com.community.dto.QuestionDTO;
-import com.community.enums.CommentTypeEnum;
 import com.community.exception.CustomizedErrorCode;
 import com.community.exception.CustomizedException;
-import com.community.mapper.CommentMapper;
 import com.community.mapper.QuestionExtMapper;
 import com.community.mapper.QuestionMapper;
 import com.community.mapper.UserMapper;
@@ -38,7 +35,7 @@ public class QuestionService {
          * size: the number of questions in one page;
          * totalCount: the total number of questions in DB.
          */
-        PaginationDTO paginationDTO = new PaginationDTO();
+        PaginationDTO<QuestionDTO> paginationDTO = new PaginationDTO<>();
         Integer totalCount = (int) questionMapper.countByExample(new QuestionExample());
         paginationDTO.setPagination(totalCount, page, size);
 
@@ -58,7 +55,7 @@ public class QuestionService {
                 questionDTO.setUser(user);
                 questionDTOList.add(questionDTO);
             }
-            paginationDTO.setQuestions(questionDTOList);
+            paginationDTO.setData(questionDTOList);
         }
 
         return paginationDTO;
@@ -94,7 +91,7 @@ public class QuestionService {
                 questionDTO.setUser(user);
                 questionDTOList.add(questionDTO);
             }
-            paginationDTO.setQuestions(questionDTOList);
+            paginationDTO.setData(questionDTOList);
         }
 
         return paginationDTO;

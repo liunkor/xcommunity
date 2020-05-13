@@ -2,6 +2,7 @@ package com.community.controller;
 
 import com.community.dto.PaginationDTO;
 import com.community.model.User;
+import com.community.service.NotificationService;
 import com.community.service.QuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -17,6 +18,9 @@ public class ProfileController {
 
     @Autowired
     private QuestionService questionService;
+
+    @Autowired
+    private NotificationService notificationService;
 
     @GetMapping("/profile/{action}")
     public String porfile(@PathVariable(name="action") String action,
@@ -35,10 +39,11 @@ public class ProfileController {
             model.addAttribute("sectionName", "My Questions");
             PaginationDTO pagination = questionService.listByUserId(user.getId(), page, size);
             model.addAttribute("pagination", pagination);
-
         } else if ("replies".equals(action)) {
             model.addAttribute("section", "replies");
-            model.addAttribute("sectionName", "Recent Replies");
+            model.addAttribute("sectionName", "Messages");
+            PaginationDTO pagination = notificationService.listByUserId(user.getId(), page, size);
+            model.addAttribute("pagination", pagination);
         }
         return "profile";
     }

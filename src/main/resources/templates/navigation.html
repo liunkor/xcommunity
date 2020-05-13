@@ -40,6 +40,10 @@
                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                     <a class="dropdown-item" href="/publish">New Post</a>
                     <a class="dropdown-item" href="/profile/questions">Profile</a>
+                    <a class="dropdown-item" href="/profile/replies">
+                        <span>Message</span>
+                        <span th:text="${session.unreadCount}" class="badge badge-info"></span>
+                    </a>
                     <div class="dropdown-divider"></div>
                     <a class="dropdown-item" th:href="@{/logout(token=${session.user.getToken()})}">Exit</a>
                 </div>

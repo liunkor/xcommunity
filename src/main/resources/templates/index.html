@@ -35,7 +35,7 @@
             </h2>
             <hr>
             <div th:if="${pagination != null}">
-                    <div class="media cell" th:each="q: ${pagination.questions}">
+                    <div class="media cell" th:each="q: ${pagination.getData()}">
                         <img th:src="${q.user.avatarUrl}" class="mr-3 " alt="..." >
                         <span class="media-body">
                             <a th:href="@{'/question/' + ${q.getId()}}">
