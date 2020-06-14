@@ -1,6 +1,7 @@
 package com.community.controller;
 
 import com.community.dto.PaginationDTO;
+import com.community.dto.QuestionDTO;
 import com.community.service.QuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -12,6 +13,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 
 @Controller
 public class IndexController {
@@ -22,11 +24,15 @@ public class IndexController {
     @GetMapping("/")
     public String index(Model model,
                         @RequestParam(name = "page", defaultValue = "1") Integer page,
-                        @RequestParam(name = "size", defaultValue = "10") Integer size) {
+                        @RequestParam(name = "size", defaultValue = "10") Integer size,
+                        @RequestParam(name="search", required = false) String search) {
 
         //get the pagination data
-        PaginationDTO pagination = questionService.list(page, size);
+        PaginationDTO pagination = questionService.list(search, page, size);
         model.addAttribute("pagination", pagination);
+        model.addAttribute("search", search);
+        var popularQuestions = questionService.selectPopular();
+        model.addAttribute("popularQuestions", popularQuestions);
         return "index";
     }
 

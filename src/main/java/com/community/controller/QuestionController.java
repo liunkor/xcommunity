@@ -33,9 +33,11 @@ public class QuestionController {
         questionService.incView(id);
         QuestionDTO questionDTO = questionService.getQuestionById(id);
         List<QuestionDTO> relatedQuestions = questionService.selectRelated(questionDTO);
+        List<QuestionDTO> popularQuestions = questionService.selectPopular();
         model.addAttribute("questionDTO", questionDTO);
         model.addAttribute("comments", comments);
         model.addAttribute("relatedQuestions", relatedQuestions);
+        model.addAttribute("popularQuestions", popularQuestions);
         return "question";
     }
 }

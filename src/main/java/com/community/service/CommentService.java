@@ -60,7 +60,10 @@ public class CommentService {
             if (question == null) {
                 throw new CustomizedException(CustomizedErrorCode.QUESTION_NOT_FOUND);
             }
+            comment.setCommentCount(0L);
             commentMapper.insert(comment);
+            question.setCommentCount((long)1);
+            questionExtMapper.incCommentCount(question);
 
             //increat the sub commentCount
             Comment parentComment = new Comment();
@@ -68,15 +71,17 @@ public class CommentService {
             parentComment.setCommentCount((long) 1);
             commentExtMapper.incCommentCount(parentComment);
 
-            //Create a related notification for inserting into DB
-            Notification2InsertDTO notification2InsertDTO = new Notification2InsertDTO();
-            notification2InsertDTO.setComment(comment);
-            notification2InsertDTO.setReceiver(dbComment.getCommentor());
-            notification2InsertDTO.setNotifier(commentor.getName());
-            notification2InsertDTO.setNotificationType(NotificationTypeEnum.REPLY_COMMENT.getType());
-            notification2InsertDTO.setOuterId(question.getId());
-            notification2InsertDTO.setOuterTitle(question.getTitle());
-            createNotifiy(notification2InsertDTO);
+            if (comment.getCommentor() != dbComment.getCommentor()) {
+                //Create a related notification for inserting into DB
+                Notification2InsertDTO notification2InsertDTO = new Notification2InsertDTO();
+                notification2InsertDTO.setComment(comment);
+                notification2InsertDTO.setReceiver(dbComment.getCommentor());
+                notification2InsertDTO.setNotifier(commentor.getName());
+                notification2InsertDTO.setNotificationType(NotificationTypeEnum.REPLY_COMMENT.getType());
+                notification2InsertDTO.setOuterId(question.getId());
+                notification2InsertDTO.setOuterTitle(question.getTitle());
+                createNotifiy(notification2InsertDTO);
+            }
         } else {
             // reply to a question (parentId is a question's id)
             Question question = questionMapper.selectByPrimaryKey(comment.getParentId());
@@ -87,15 +92,17 @@ public class CommentService {
             question.setCommentCount((long) 1);
             questionExtMapper.incCommentCount(question);
 
-            //Create a related notification for inserting into DB
-            Notification2InsertDTO notification2InsertDTO = new Notification2InsertDTO();
-            notification2InsertDTO.setComment(comment);
-            notification2InsertDTO.setReceiver(question.getCreator());
-            notification2InsertDTO.setNotifier(commentor.getName());
-            notification2InsertDTO.setNotificationType(NotificationTypeEnum.REPLY_QUESTION.getType());
-            notification2InsertDTO.setOuterId(question.getId());
-            notification2InsertDTO.setOuterTitle(question.getTitle());
-            createNotifiy(notification2InsertDTO);
+            if (question.getCreator() != commentor.getId()) {
+                //Create a related notification for inserting into DB
+                Notification2InsertDTO notification2InsertDTO = new Notification2InsertDTO();
+                notification2InsertDTO.setComment(comment);
+                notification2InsertDTO.setReceiver(question.getCreator());
+                notification2InsertDTO.setNotifier(commentor.getName());
+                notification2InsertDTO.setNotificationType(NotificationTypeEnum.REPLY_QUESTION.getType());
+                notification2InsertDTO.setOuterId(question.getId());
+                notification2InsertDTO.setOuterTitle(question.getTitle());
+                createNotifiy(notification2InsertDTO);
+            }
         }
     }
 
@@ -105,7 +112,6 @@ public class CommentService {
      */
     private void createNotifiy(Notification2InsertDTO notification2InsertDTO) {
         Notification notification = new Notification();
-
         notification.setGmtCreate(System.currentTimeMillis());
         notification.setType(notification2InsertDTO.getNotificationType());
         notification.setNotifier(notification2InsertDTO.getComment().getCommentor());

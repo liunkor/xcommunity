@@ -2,6 +2,7 @@ package com.community.service;
 
 import com.community.dto.PaginationDTO;
 import com.community.dto.QuestionDTO;
+import com.community.dto.QuestionQueryDTO;
 import com.community.exception.CustomizedErrorCode;
 import com.community.exception.CustomizedException;
 import com.community.mapper.QuestionExtMapper;
@@ -29,23 +30,29 @@ public class QuestionService {
     @Autowired
     private QuestionExtMapper questionExtMapper;
 
-    public PaginationDTO list(Integer page, Integer size) {
+    public PaginationDTO list(String search, Integer page, Integer size) {
         /**
          * page: the number of the current page;
          * size: the number of questions in one page;
          * totalCount: the total number of questions in DB.
          */
+        if (StringUtils.isNotBlank(search)) {
+            String[] searches = StringUtils.split(search, " ");
+            search = Arrays.stream(searches).map(c -> c.toLowerCase()).collect(Collectors.joining("|"));;
+        }
+
         PaginationDTO<QuestionDTO> paginationDTO = new PaginationDTO<>();
-        Integer totalCount = (int) questionMapper.countByExample(new QuestionExample());
+        QuestionQueryDTO questionQueryDTO = new QuestionQueryDTO();
+        questionQueryDTO.setSearch(search);
+        Integer totalCount = questionExtMapper.countBySearch(questionQueryDTO);
+
         paginationDTO.setPagination(totalCount, page, size);
 
         //size * (page - 1)
         Integer offset = size * (paginationDTO.getPage() - 1);
-        QuestionExample questionExample = new QuestionExample();
-        questionExample.setOrderByClause("gmt_modified desc"); // order by gmtModified desc
-        List<Question> questions = questionMapper.selectByExampleWithRowbounds(
-                questionExample,
-                new RowBounds(offset, size));
+        questionQueryDTO.setSize(size);
+        questionQueryDTO.setOffset(offset);
+        List<Question> questions = questionExtMapper.selectBySearch(questionQueryDTO);
         if (questions != null) {
             List<QuestionDTO> questionDTOList = new ArrayList<>();
             for (Question question: questions) {
@@ -168,4 +175,13 @@ public class QuestionService {
         return questionDTOS;
     }
 
+    public List<QuestionDTO> selectPopular() {
+        List<Question> questions = questionExtMapper.selectPopular();
+        List<QuestionDTO> questionDTOS = questions.stream().map(p -> {
+            var questionDTO = new QuestionDTO();
+            BeanUtils.copyProperties(p, questionDTO);
+            return questionDTO;
+        }).collect(Collectors.toList());
+        return questionDTOS;
+    }
 }

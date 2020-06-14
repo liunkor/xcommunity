@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.community.dto.AccessTokenDTO;
 
 import com.community.dto.GithupUser;
+import lombok.extern.slf4j.Slf4j;
 import okhttp3.*;
 import org.springframework.stereotype.Component;
 
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Component;
 import java.io.IOException;
 
 @Component
+@Slf4j
 public class GithubProvider {
 
     public String getAccessToken(AccessTokenDTO accessTokenDTO) {
@@ -31,6 +33,7 @@ public class GithubProvider {
             System.out.println(token);
             return token;
         } catch (Exception e) {
+            log.error("github login oauth error {}");
             e.printStackTrace();
         }
         return null;
