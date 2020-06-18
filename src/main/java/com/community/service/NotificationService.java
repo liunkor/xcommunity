@@ -75,7 +75,7 @@ public class NotificationService {
         notificationExample.createCriteria()
                 .andReceiverEqualTo(userid)
                 .andStatusEqualTo(NotificationStatusEnum.UNREAD.getStatus());
-        var unreadCount = notificationMapper.countByExample(notificationExample);
+        Long unreadCount = notificationMapper.countByExample(notificationExample);
         return unreadCount;
     }
 

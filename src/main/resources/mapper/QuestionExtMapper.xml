@@ -35,6 +35,30 @@
   <select id="selectRelated" parameterType="com.community.model.Question" resultMap="BaseResultMap">
     select * from QUESTION
     where id != #{id} and tag regexp #{tag}
-    limit 10
+    limit 6
+  </select>
+
+  <select id="countBySearch" parameterType="com.community.dto.QuestionQueryDTO" resultType="java.lang.Integer">
+    select count(*) from QUESTION
+    <where>
+        <if test="search != null">
+          and lower(title) regexp #{search}
+        </if>
+    </where>
+  </select>
+
+  <select id="selectBySearch" parameterType="com.community.dto.QuestionQueryDTO" resultMap="BaseResultMap">
+    select * from QUESTION
+    <where>
+      <if test="search != null">
+        and lower(title) regexp #{search}
+      </if>
+    </where>
+    order by gmt_create desc limit #{offset}, #{size}
+  </select>
+
+  <select id="selectPopular"  resultMap="BaseResultMap">
+    select * from QUESTION
+    order by VIEW_COUNT desc limit 6
   </select>
 </mapper>

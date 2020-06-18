@@ -6,6 +6,7 @@ import com.community.mapper.UserMapper;
 import com.community.model.User;
 import com.community.provider.GithubProvider;
 import com.community.service.UserService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -19,6 +20,7 @@ import java.io.IOException;
 import java.util.UUID;
 
 @Controller
+@Slf4j
 public class AuthorizeController {
 
     @Autowired
@@ -71,6 +73,7 @@ public class AuthorizeController {
             userService.createOrUpdateUser(user);
             return "redirect:/";
         } else {
+            log.error("callback get github error, {}", githupUser);
             return "redirect:/";
         }
     }

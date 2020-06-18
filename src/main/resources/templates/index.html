@@ -24,72 +24,92 @@
 <body class="container .container-lg main" style="background-color: #d2d8de;">
     <div th:insert="navigation :: nav"></div>
 
-<div class="container-fluid x-main-content">
-    <div class="row" id="main-content-row">
-        <div class="col-lg-8 col-md-12 col-sm-12 col-12" ><br>
-            <h2>
-                <svg class="bi bi-list-ul" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                    <path fill-rule="evenodd" d="M5 11.5a.5.5 0 01.5-.5h9a.5.5 0 010 1h-9a.5.5 0 01-.5-.5zm0-4a.5.5 0 01.5-.5h9a.5.5 0 010 1h-9a.5.5 0 01-.5-.5zm0-4a.5.5 0 01.5-.5h9a.5.5 0 010 1h-9a.5.5 0 01-.5-.5zm-3 1a1 1 0 100-2 1 1 0 000 2zm0 4a1 1 0 100-2 1 1 0 000 2zm0 4a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd"/>
-                </svg>
-                <span>Topics</span>
-            </h2>
-            <hr>
-            <div th:if="${pagination != null}">
-                    <div class="media cell" th:each="q: ${pagination.getData()}">
-                        <img th:src="${q.user.avatarUrl}" class="mr-3 " alt="..." >
-                        <span class="media-body">
-                            <a th:href="@{'/question/' + ${q.getId()}}">
-                                <span class="item_title" th:text="${q.title}"></span>
+    <div class="container-fluid x-main-content">
+        <div class="row" id="main-content-row">
+            <div class="col-lg-8 col-md-12 col-sm-12 col-12" ><br>
+                <h2>
+                    <svg class="bi bi-list-ul" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                        <path fill-rule="evenodd" d="M5 11.5a.5.5 0 01.5-.5h9a.5.5 0 010 1h-9a.5.5 0 01-.5-.5zm0-4a.5.5 0 01.5-.5h9a.5.5 0 010 1h-9a.5.5 0 01-.5-.5zm0-4a.5.5 0 01.5-.5h9a.5.5 0 010 1h-9a.5.5 0 01-.5-.5zm-3 1a1 1 0 100-2 1 1 0 000 2zm0 4a1 1 0 100-2 1 1 0 000 2zm0 4a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd"/>
+                    </svg>
+                    <span>Topics</span>
+                </h2>
+                <hr>
+                <div th:if="${pagination!= null && pagination.totalPage != 0}">
+                        <div class="media cell" th:each="q: ${pagination.getData()}">
+                            <img th:if="${q.user != null }" th:src="${q.user.avatarUrl}" class="mr-3 " alt="..." >
+                            <span class="media-body">
+                                <a th:href="@{'/question/' + ${q.getId()}}">
+                                    <span class="item_title" th:text="${q.title}"></span>
+                                </a>
+                                <div class="sep5"></div>
+                                <div class="text-desc">
+                                    <span  th:text="${q.viewCount}"></span> 次浏览 •
+                                    <span th:text="${q.commentCount}"></span> 个评论 •
+                                    <span th:text="${#dates.format(q.gmtCreate, 'yyyy-MM-dd HH:MM')}"></span>
+                                </div>
+                        </div>
+                </div><br>
+                <nav aria-label="Page navigation example" th:if="${pagination.totalPage > 0}">
+                    <ul class="pagination" th:if="${search}">
+                        <li th:if="${pagination.showFirstPage}" class="page-item"  >
+                            <a class="page-link" th:href="@{/(page=1, search=${search})}" aria-label="Previous">
+                                <span aria-hidden="true">&lt;&lt;</span>
                             </a>
-                            <div class="sep5"></div>
-                            <div class="text-desc">
-                                <span  th:text="${q.viewCount}"></span> 次浏览 •
-                                <span th:text="${q.commentCount}"></span> 个评论 •
-                                <span th:text="${#dates.format(q.gmtCreate, 'yyyy-MM-dd HH:MM')}"></span>
-                            </div>
-                    </div>
-            </div><br>
-            <nav aria-label="Page navigation example">
-                <ul class="pagination">
-                    <li th:if="${pagination.showFirstPage}" class="page-item"  >
-                        <a class="page-link" href="/?page=1" aria-label="Previous">
-                            <span aria-hidden="true">&lt;&lt;</span>
-                        </a>
-                    </li>
+                        </li>
 
-                    <li th:if="${pagination.showPrevious}" class="page-item">
-                        <a class="page-link" th:href="@{/(page=${pagination.page - 1})}">&lt;</a>
-                    </li>
-                    <li th:each="page : ${pagination.pages}" th:class="${pagination.page == page}? 'page-item active' : ''" >
-                        <a class="page-link" th:href="@{/(page=${page})}" th:text="${page}"></a>
-                    </li>
-                    <li th:if="${pagination.showNext}" class="page-item">
-                        <a class="page-link" th:href="@{/(page=${pagination.page + 1})}">&gt;</a>
-                    </li>
+                        <li th:if="${pagination.showPrevious}" class="page-item">
+                            <a class="page-link" th:href="@{/(page=${pagination.page - 1}, search=${search})}">&lt;</a>
+                        </li>
+                        <li th:each="page : ${pagination.pages}" th:class="${pagination.page == page}? 'page-item active' : ''" >
+                            <a class="page-link" th:href="@{/(page=${page}, search=${search})}" th:text="${page}"></a>
+                        </li>
+                        <li th:if="${pagination.showNext}" class="page-item">
+                            <a class="page-link" th:href="@{/(page=${pagination.page + 1}, search=${search})}">&gt;</a>
+                        </li>
 
-                    <li th:if="${pagination.showEndPage}" class="page-item"  >
-                        <a class="page-link" th:href="@{/(page=${pagination.totalPage})}" aria-label="Previous">
-                            <span aria-hidden="true">&gt;&gt;</span>
-                        </a>
-                    </li>
-                </ul>
-            </nav>
-        </div>
+                        <li th:if="${pagination.showEndPage}" class="page-item"  >
+                            <a class="page-link" th:href="@{/(page=${pagination.totalPage}, search=${search})}" aria-label="Previous">
+                                <span aria-hidden="true">&gt;&gt;</span>
+                            </a>
+                        </li>
+                    </ul>
+                    <ul class="pagination" th:if="${search == null}">
+                        <li th:if="${pagination.showFirstPage}" class="page-item"  >
+                            <a class="page-link" href="/?page=1" aria-label="Previous">
+                                <span aria-hidden="true">&lt;&lt;</span>
+                            </a>
+                        </li>
 
-        <div class="col-lg-4 col-md-12 col-sm-12 col-12" >
-            <br>
-            <h5>Popular topics</h5>
-            <hr>
-            <ul class="list-group list-group-flush">
-                <li class="list-group-item">logstash导入es自动生成的index的date_detection为什么是false</li>
-                <li class="list-group-item">es7.3 新增字段后，如何快速给新字段赋值</li>
-                <li class="list-group-item">logstash导入es自动生成的index的date_detection为什么是false</li>
-            </ul>
+                        <li th:if="${pagination.showPrevious}" class="page-item">
+                            <a class="page-link" th:href="@{/(page=${pagination.page - 1})}">&lt;</a>
+                        </li>
+                        <li th:each="page : ${pagination.pages}" th:class="${pagination.page == page}? 'page-item active' : ''" >
+                            <a class="page-link" th:href="@{/(page=${page})}" th:text="${page}"></a>
+                        </li>
+                        <li th:if="${pagination.showNext}" class="page-item">
+                            <a class="page-link" th:href="@{/(page=${pagination.page + 1})}">&gt;</a>
+                        </li>
+
+                        <li th:if="${pagination.showEndPage}" class="page-item"  >
+                            <a class="page-link" th:href="@{/(page=${pagination.totalPage})}" aria-label="Previous">
+                                <span aria-hidden="true">&gt;&gt;</span>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+                <span class="display-4" th:if="${pagination.totalPage == 0}">
+                    Not found message...
+                </span>
+            </div>
+
+            <div class="col-lg-4 col-md-12 col-sm-12 col-12">
+                <div th:insert="sidebar:: popular"></div>
+            </div>
+
         </div>
     </div>
-</div>
-<div align="center"><br>
-    <p>Copyright@2020 xCommunity.com</p>
-</div>
+
+    <div th:insert="footer :: foot"></div>
+
 </body>
 </html>

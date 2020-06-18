@@ -1,21 +1,18 @@
 create table question
 (
-	id int auto_increment,
-	title varchar(50),
-	description TEXT,
-	gmt_create BIGINT,
-	gmt_modified BIGINT,
-	creator int,
-	comment_count int default 0,
-	view_count int default 0,
-	like_count int default 0,
-	tag VARCHAR(255)
+    id            bigint auto_increment,
+    title         varchar(100),
+    description   text,
+    gmt_create    bigint,
+    gmt_modified  bigint,
+    creator       bigint not null,
+    view_count    bigint default 0,
+    like_count    bigint default 0,
+    tag           varchar(255),
+    comment_count bigint default 0,
+    constraint question_pk
+        primary key (id)
 );
 
 create unique index question_id_uindex
-	on question (id);
-
-alter table question
-	add constraint question_pk
-		primary key (id);
-
+    on question (id);
