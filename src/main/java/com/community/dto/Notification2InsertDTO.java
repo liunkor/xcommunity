@@ -1,6 +1,5 @@
 package com.community.dto;
 
-import com.community.enums.NotificationTypeEnum;
 import com.community.model.Comment;
 import lombok.Data;
 

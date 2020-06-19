@@ -1,6 +1,5 @@
 package com.community.dto;
 
-import com.community.model.Question;
 import com.community.model.User;
 import lombok.Data;
 
