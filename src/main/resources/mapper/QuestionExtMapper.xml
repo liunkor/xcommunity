@@ -33,13 +33,13 @@
   </update>
 
   <select id="selectRelated" parameterType="com.community.model.Question" resultMap="BaseResultMap">
-    select * from QUESTION
+    select * from question
     where id != #{id} and tag regexp #{tag}
     limit 6
   </select>
 
   <select id="countBySearch" parameterType="com.community.dto.QuestionQueryDTO" resultType="java.lang.Integer">
-    select count(*) from QUESTION
+    select count(*) from question
     <where>
         <if test="search != null">
           and lower(title) regexp #{search}
@@ -48,7 +48,7 @@
   </select>
 
   <select id="selectBySearch" parameterType="com.community.dto.QuestionQueryDTO" resultMap="BaseResultMap">
-    select * from QUESTION
+    select * from question
     <where>
       <if test="search != null">
         and lower(title) regexp #{search}
@@ -58,7 +58,7 @@
   </select>
 
   <select id="selectPopular"  resultMap="BaseResultMap">
-    select * from QUESTION
-    order by VIEW_COUNT desc limit 6
+    select * from question
+    order by view_count desc limit 6
   </select>
 </mapper>

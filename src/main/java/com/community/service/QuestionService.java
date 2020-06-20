@@ -49,7 +49,7 @@ public class QuestionService {
         paginationDTO.setPagination(totalCount, page, size);
 
         //size * (page - 1)
-        Integer offset = size * (paginationDTO.getPage() > 0 ? paginationDTO.getPage(): 1 - 1);
+        Integer offset = size * (paginationDTO.getPage() - 1 > 0 ? paginationDTO.getPage() : 0 );
         questionQueryDTO.setSize(size);
         questionQueryDTO.setOffset(offset);
         List<Question> questions = questionExtMapper.selectBySearch(questionQueryDTO);
@@ -82,7 +82,7 @@ public class QuestionService {
         paginationDTO.setPagination(totalCount, page, size);
 
         //size * (page - 1)
-        Integer offset = size * (paginationDTO.getPage() > 0 ? paginationDTO.getPage(): 1 - 1);
+        Integer offset = size * (paginationDTO.getPage() - 1 > 0 ? paginationDTO.getPage() : 0 );
         QuestionExample questionExample2 = new QuestionExample();
         questionExample2.setOrderByClause("gmt_modified desc");
         questionExample2.createCriteria()
