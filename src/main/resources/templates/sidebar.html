@@ -41,7 +41,7 @@
             </ul>
         </div>
         <div th:if="${relatedQuestions.size() != 0}"><br>
-            <h6>Related topics</h6>
+            <h6>Related questions</h6>
             <hr>
             <ul class="related-question">
                 <li th:each="relatedQuestion : ${relatedQuestions}" class="">
@@ -55,7 +55,7 @@
 <div th:fragment="noLogined">
     <div th:if="${relatedQuestions.size() != 0}">
         <br>
-        <h6>Related topics</h6>
+        <h6>Related questions</h6>
         <hr>
         <ul class="related-question">
             <li th:each="relatedQuestion : ${relatedQuestions}" class="">
@@ -67,7 +67,7 @@
 
 <div th:fragment="popular">
     <div th:if="${popularQuestions.size() != 0}"><br>
-        <h6>Popular topics</h6>
+        <h6>Popular questions</h6>
         <hr>
         <ul class="related-question">
             <li th:each="q : ${popularQuestions}" class="">

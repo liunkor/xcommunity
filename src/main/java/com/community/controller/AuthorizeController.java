@@ -39,7 +39,7 @@ public class AuthorizeController {
     private UserMapper userMapper;
 
     @Autowired
-    UserService userService;
+    private UserService userService;
 
     // login with github account
     @GetMapping("/callback")

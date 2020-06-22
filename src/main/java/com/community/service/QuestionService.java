@@ -7,6 +7,7 @@ import com.community.exception.CustomizedErrorCode;
 import com.community.exception.CustomizedException;
 import com.community.mapper.QuestionExtMapper;
 import com.community.mapper.QuestionMapper;
+import com.community.mapper.TopicMapper;
 import com.community.mapper.UserMapper;
 import com.community.model.*;
 import org.apache.commons.lang3.StringUtils;
@@ -29,6 +30,9 @@ public class QuestionService {
 
     @Autowired
     private QuestionExtMapper questionExtMapper;
+
+    @Autowired
+    private TopicMapper topicMapper;
 
     public PaginationDTO list(String search, Integer page, Integer size) {
         /**
@@ -114,6 +118,7 @@ public class QuestionService {
         User user = userMapper.selectByPrimaryKey(question.getCreator());
         BeanUtils.copyProperties(question, questionDTO);
         questionDTO.setUser(user);
+        questionDTO.setTopic(topicMapper.selectByPrimaryKey(question.getTopic()));
 
         return questionDTO;
     }
@@ -183,5 +188,39 @@ public class QuestionService {
             return questionDTO;
         }).collect(Collectors.toList());
         return questionDTOS;
+    }
+
+    public PaginationDTO listByTopic(Integer topicId, Integer page, Integer size) {
+        /**
+         * page: the number of the current page;
+         * size: the number of questions in one page;
+         */
+        PaginationDTO paginationDTO = new PaginationDTO();
+        QuestionExample questionExample = new QuestionExample();
+        questionExample.createCriteria()
+                .andTopicEqualTo(topicId);
+        Integer totalCount = (int)questionMapper.countByExample(questionExample);
+        paginationDTO.setPagination(totalCount, page, size);
+
+        //size * (page - 1)
+        Integer offset = size * (paginationDTO.getPage() - 1 > 0 ? paginationDTO.getPage() : 0 );
+        QuestionExample questionExample2 = new QuestionExample();
+        questionExample2.setOrderByClause("gmt_modified desc");
+        questionExample2.createCriteria()
+                .andTopicEqualTo(topicId);
+        List<Question> questions = questionMapper.selectByExampleWithRowbounds(questionExample2, new RowBounds(offset, size));
+        Topic topic = topicMapper.selectByPrimaryKey(topicId);
+        if (questions != null) {
+            List<QuestionDTO> questionDTOList = new ArrayList<>();
+            for (Question question: questions) {
+                QuestionDTO questionDTO = new QuestionDTO();
+                BeanUtils.copyProperties(question, questionDTO);
+                questionDTO.setTopic(topic);
+                questionDTOList.add(questionDTO);
+            }
+            paginationDTO.setData(questionDTOList);
+        }
+
+        return paginationDTO;
     }
 }

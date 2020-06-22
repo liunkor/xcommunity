@@ -14,7 +14,7 @@ import java.util.UUID;
 public class UserService {
 
     @Autowired
-    UserMapper userMapper;
+    private UserMapper userMapper;
 
     public void createOrUpdateUser(User user) {
         UserExample userExample = new UserExample();

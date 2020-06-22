@@ -2,10 +2,11 @@ package com.community.controller;
 
 import com.community.cache.TagCache;
 import com.community.dto.QuestionDTO;
-import com.community.mapper.UserMapper;
 import com.community.model.Question;
+import com.community.model.Topic;
 import com.community.model.User;
 import com.community.service.QuestionService;
+import com.community.service.TopicService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -16,16 +17,22 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 @Controller
 public class PublishController {
 
     @Autowired
-    QuestionService questionService;
+    private QuestionService questionService;
+
+    @Autowired
+    private TopicService topicService;
 
     @GetMapping("/publish")
     public String toPublish(HttpServletRequest request,
                             Model model) {
+        List<Topic> topics = topicService.getAllTopics();
+        model.addAttribute("topics", topics);
         model.addAttribute("tags", TagCache.get());
         if (request.getSession().getAttribute("user") == null) {
             return "redirect:/";
@@ -38,6 +45,7 @@ public class PublishController {
                           @RequestParam(name="description", required = false) String description,
                           @RequestParam(name="tag", required = false) String tag,
                           @RequestParam(name = "id", required = false) Long id,
+                          @RequestParam(name = "topic", required = false) Integer topicId,
                           HttpServletRequest request,
                           Model model) {
 
@@ -45,6 +53,9 @@ public class PublishController {
         model.addAttribute("description", description);
         model.addAttribute("tag", tag);
         model.addAttribute("tags", TagCache.get());
+        model.addAttribute("topicId", topicId);
+        List<Topic> topics = topicService.getAllTopics();
+        model.addAttribute("topics", topics);
 
         if (title == null || title == "") {
             model.addAttribute("error", "The title cann't be blank");
@@ -52,6 +63,10 @@ public class PublishController {
         }
         if (description == null || description == "") {
             model.addAttribute("error", "The description cann't be blank");
+            return "publish";
+        }
+        if (topicId == null || topicId == 0) {
+            model.addAttribute("error", "Please elect a topic");
             return "publish";
         }
         if (tag == null || tag == "") {
@@ -80,6 +95,7 @@ public class PublishController {
         question.setGmtCreate(System.currentTimeMillis());
         question.setGmtModified(question.getGmtCreate());
         question.setId(id);
+        question.setTopic(topicId);
         questionService.createOrUpdate(question);
 
         return "redirect:/";
@@ -95,7 +111,9 @@ public class PublishController {
         model.addAttribute("tag", question.getTag());
         model.addAttribute("id", id);
         model.addAttribute("tags", TagCache.get());
-
+        model.addAttribute("topicId", question.getTopic().getId());
+        List<Topic> topics = topicService.getAllTopics();
+        model.addAttribute("topics", topics);
         return "publish";
     }
 }

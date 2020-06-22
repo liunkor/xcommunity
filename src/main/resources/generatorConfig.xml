@@ -6,7 +6,7 @@
         
         <plugin type="org.mybatis.generator.plugins.RowBoundsPlugin"></plugin>
         <jdbcConnection driverClass="com.mysql.cj.jdbc.Driver"
-                        connectionURL="jdbc:mysql://localhost:3306/xcommunit?useSSL=false"
+                        connectionURL="jdbc:mysql://localhost:3306/xcommunity?useSSL=false"
                         userId="root"
                         password="88888888">
             <property name="nullCatalogMeansCurrent" value="true"/>
@@ -29,9 +29,10 @@
             <property name="enableSubPackages" value="true"/>
         </javaClientGenerator>
 
-        <table schema="xcommunit" tableName="user" domainObjectName="User"/>
+        <table schema="xcommunity" tableName="user" domainObjectName="User"/>
         <table tableName="question" domainObjectName="Question"/>
         <table tableName="comment" domainObjectName="Comment"/>
         <table tableName="notification" domainObjectName="Notification"/>
+        <table tableName="topic" domainObjectName="Topic"/>
     </context>
 </generatorConfiguration>

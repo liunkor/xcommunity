@@ -57,6 +57,18 @@
                         <textarea id="description" name="description" rows="15" cols="30"
                                   th:text="${description}" style="display:none;"></textarea>
                     </div>
+                    <div>
+                        <select id="topic" name="topic" class="btn btn-secondary" style="width: 300px; font-size: 14px;">
+                            <option value="0">select a topic...</option>
+                            <option th:if="${topics != null}" th:each="topic: ${topics}"
+                                    th:select-topic-id="${topic.id}"
+                                    th:value="${topic.id}"
+                                    th:selected="${topicId == topic.id}"
+                                    th:text="${topic.name}">
+                            </option>
+                        </select>
+                    </div>
+                    <hr>
                     <div class="form-group">
                         <label for="title">Tags</label>
                         <input type="text" class="form-control" id="tag" name="tag" onclick="showSelectTag()"

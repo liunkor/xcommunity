@@ -1,0 +1,1 @@
+alter table topic modify name varchar(64) not null;

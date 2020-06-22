@@ -1,5 +1,6 @@
 package com.community.dto;
 
+import com.community.model.Topic;
 import com.community.model.User;
 import lombok.Data;
 
@@ -15,5 +16,6 @@ public class QuestionDTO {
         private Long viewCount;
         private Long likeCount;
         private Long commentCount;
+        private Topic topic;
         private User user;
 }
