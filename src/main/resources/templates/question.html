@@ -46,7 +46,8 @@
                             <span class="media-body">
                                     <div class="sep5"></div>
                                     <div class="text-desc">
-                                        <span th:text="${questionDTO.getTopic().getName()}"></span> •
+                                        <a th:href="@{'/topic/' + ${questionDTO.getTopic().getId()}}">
+                                        <span th:text="${questionDTO.getTopic().getName()}"></span></a> •
                                         <span th:text="${questionDTO.getUser().getName()}"></span> •
                                         <span th:text="${questionDTO.getViewCount()}"></span> views •
                                         <span th:text="${questionDTO.getCommentCount()}"></span> comments •

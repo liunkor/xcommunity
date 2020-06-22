@@ -27,12 +27,12 @@
     <div class="container-fluid x-main-content">
         <div class="row" id="main-content-row">
             <div class="col-lg-8 col-md-12 col-sm-12 col-12" ><br>
-                <h2>
+                <h3>
                     <svg class="bi bi-list-ul" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
                         <path fill-rule="evenodd" d="M5 11.5a.5.5 0 01.5-.5h9a.5.5 0 010 1h-9a.5.5 0 01-.5-.5zm0-4a.5.5 0 01.5-.5h9a.5.5 0 010 1h-9a.5.5 0 01-.5-.5zm0-4a.5.5 0 01.5-.5h9a.5.5 0 010 1h-9a.5.5 0 01-.5-.5zm-3 1a1 1 0 100-2 1 1 0 000 2zm0 4a1 1 0 100-2 1 1 0 000 2zm0 4a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd"/>
                     </svg>
-                    <span>Topics</span>
-                </h2>
+                    <span><a href="/">xCommunity</a>/<a th:href="@{'/topic/' + ${id}}"><span th:text="${topicName}"/></a></span>
+                </h3>
                 <hr>
                 <div th:if="${pagination!= null && pagination.totalPage != 0}">
                         <div class="media cell" th:each="q: ${pagination.getData()}">
